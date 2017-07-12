@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
@@ -10,13 +11,14 @@ using System.Threading.Tasks;
 namespace Serializer
 {
     [Serializable]
-    class Person : ISerializable, IDeserializationCallback
-    {
+    class Person : ISerializable
+        
+        {
         public string Name { get; set; }
         public string Address { get; set; }
         public string Phone { get; set; }
         private DateTime recordingTime;
-        public static int counter = 0;
+        private static int serialIndex;
         [NonSerialized] public int serial;
 
         public Person (string name, string address, string phone) 
@@ -24,8 +26,7 @@ namespace Serializer
             Name = name;
             Address = address;
             Phone = phone;
-            counter++;
-            serial = counter;
+            serial = PersonCount() + 1;
             recordingTime = DateTime.Now;
         }
 
@@ -34,7 +35,7 @@ namespace Serializer
             Name = (string)info.GetValue("Name", typeof(string));
             Address = (string)info.GetValue("Address", typeof(string));
             Phone = (string)info.GetValue("Phone", typeof(string));
-            recordingTime = (DateTime)info.GetValue("recordingTime", typeof(DateTime));
+            recordingTime = (DateTime)info.GetValue("RecordingTime", typeof(DateTime));
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -42,12 +43,12 @@ namespace Serializer
             info.AddValue("Name", Name);
             info.AddValue("Address", Address);
             info.AddValue("Phone", Phone);
-            info.AddValue("recordingTime", recordingTime);
+            info.AddValue("RecordingTime", recordingTime);
         }
 
-        public void Serialize(string FilePath = "Person1.dat")
+        public void Serialize()
         {
-            FilePath = "Person" + serial + ".dat";
+            string FilePath = "Person" + serial + ".dat";
             Stream stream = File.Open(FilePath, FileMode.Create);
             BinaryFormatter bf = new BinaryFormatter();
 
@@ -55,8 +56,9 @@ namespace Serializer
             stream.Close();
         }
 
-        public static Person Deserialize(string FilePath = "Person1.dat")
+        public static Person Deserialize(int serialIndex)
         {
+            string FilePath = "person" + serialIndex.ToString() + ".dat";
             Stream stream = File.Open(FilePath, FileMode.Open);
             BinaryFormatter bf = new BinaryFormatter();
 
@@ -65,11 +67,52 @@ namespace Serializer
             return person;
         }
 
-        void IDeserializationCallback.OnDeserialization(Object sender)
+        public static int PersonCount()
         {
-            //still needs to be implemented
+            string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            DirectoryInfo di = new DirectoryInfo(path);
+
+            int personNum = di.GetFiles("*.dat", SearchOption.AllDirectories).Length;
+
+            return personNum;
         }
 
+        public static Person ShowNext()
+        {
+            serialIndex++;
+
+            int highestSerial = PersonCount();
+            if (serialIndex > highestSerial)
+            {
+                serialIndex = highestSerial;
+            }
+            return Deserialize(serialIndex);
+        }
+
+        public static Person ShowPrevious()
+        {
+            serialIndex--;
+
+            if (serialIndex == 0)
+            {
+                serialIndex = 1;
+            }
+            return Deserialize(serialIndex);
+        }
+
+        public static Person ShowFirst()
+        {
+            serialIndex = 1;
+            return Deserialize(1);
+        }
+
+        public static Person ShowLast()
+        {
+            int highestSerial = PersonCount();
+            serialIndex = highestSerial;
+            return Deserialize(highestSerial);
+
+        }
     }
 }
 

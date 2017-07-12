@@ -37,6 +37,8 @@
             this.previousBtn = new System.Windows.Forms.Button();
             this.nextBtn = new System.Windows.Forms.Button();
             this.saveBtn = new System.Windows.Forms.Button();
+            this.firstBtn = new System.Windows.Forms.Button();
+            this.lastBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // nameTxt
@@ -95,15 +97,17 @@
             this.previousBtn.TabIndex = 6;
             this.previousBtn.Text = "Previous";
             this.previousBtn.UseVisualStyleBackColor = true;
+            this.previousBtn.Click += new System.EventHandler(this.previousBtn_Click);
             // 
             // nextBtn
             // 
-            this.nextBtn.Location = new System.Drawing.Point(226, 206);
+            this.nextBtn.Location = new System.Drawing.Point(171, 206);
             this.nextBtn.Name = "nextBtn";
             this.nextBtn.Size = new System.Drawing.Size(75, 23);
             this.nextBtn.TabIndex = 7;
             this.nextBtn.Text = "Next";
             this.nextBtn.UseVisualStyleBackColor = true;
+            this.nextBtn.Click += new System.EventHandler(this.nextBtn_Click);
             // 
             // saveBtn
             // 
@@ -115,11 +119,33 @@
             this.saveBtn.UseVisualStyleBackColor = true;
             this.saveBtn.Click += new System.EventHandler(this.saveBtn_Click);
             // 
+            // firstBtn
+            // 
+            this.firstBtn.Location = new System.Drawing.Point(90, 12);
+            this.firstBtn.Name = "firstBtn";
+            this.firstBtn.Size = new System.Drawing.Size(75, 23);
+            this.firstBtn.TabIndex = 9;
+            this.firstBtn.Text = "First";
+            this.firstBtn.UseVisualStyleBackColor = true;
+            this.firstBtn.Click += new System.EventHandler(this.firstBtn_Click);
+            // 
+            // lastBtn
+            // 
+            this.lastBtn.Location = new System.Drawing.Point(171, 12);
+            this.lastBtn.Name = "lastBtn";
+            this.lastBtn.Size = new System.Drawing.Size(75, 23);
+            this.lastBtn.TabIndex = 10;
+            this.lastBtn.Text = "Last";
+            this.lastBtn.UseVisualStyleBackColor = true;
+            this.lastBtn.Click += new System.EventHandler(this.lastBtn_Click);
+            // 
             // Persons
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(575, 262);
+            this.ClientSize = new System.Drawing.Size(575, 281);
+            this.Controls.Add(this.lastBtn);
+            this.Controls.Add(this.firstBtn);
             this.Controls.Add(this.saveBtn);
             this.Controls.Add(this.nextBtn);
             this.Controls.Add(this.previousBtn);
@@ -131,6 +157,7 @@
             this.Controls.Add(this.nameTxt);
             this.Name = "Persons";
             this.Text = "Persons";
+            this.Load += new System.EventHandler(this.Persons_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -147,6 +174,8 @@
         private System.Windows.Forms.Button previousBtn;
         private System.Windows.Forms.Button nextBtn;
         private System.Windows.Forms.Button saveBtn;
+        private System.Windows.Forms.Button firstBtn;
+        private System.Windows.Forms.Button lastBtn;
     }
 }
 
